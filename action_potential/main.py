@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def main():
@@ -6,13 +7,15 @@ def main():
     ax.set_xlim((-10, 10))
     ax.set_ylim((-10, 10))
 
-    from objects.shapes.circle import Circle
+    from objects.shapes.ellipse import Ellipse
 
-    c = Circle({
-        Circle.Attr.x: 1,
-        Circle.Attr.y: 2,
-        Circle.Attr.r: 0.5,
-        Circle.Attr.color: "blue",
+    c = Ellipse({
+        Ellipse.Attr.x: 1,
+        Ellipse.Attr.y: 2,
+        Ellipse.Attr.w: 3,
+        Ellipse.Attr.h: 5,
+        Ellipse.Attr.angle: np.pi / 4,
+        Ellipse.Attr.color: "green",
     })
     c.draw(ax)
 
