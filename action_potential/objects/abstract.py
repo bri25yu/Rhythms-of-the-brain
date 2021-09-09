@@ -25,4 +25,8 @@ class AbstractObject:
         raise NotImplementedError()
 
     def update(self, config: dict):
+        config = {
+            **self.config,
+            **config,
+        }
         self.__init__(config)

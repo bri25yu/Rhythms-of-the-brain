@@ -20,11 +20,20 @@ class Ellipse(AbstractObject):
         self.angle = self.config.get(self.Attr.angle, self.DEFAULT.angle)
 
     def draw(self, ax):
-        e = patches.Ellipse(
+        self.o = patches.Ellipse(
             (self.x, self.y),
             self.w,
             self.h,
             angle=np.degrees(self.angle),
             color=self.color,
         )
-        ax.add_patch(e)
+        ax.add_patch(self.o)
+
+    def update(self, config: dict):
+        super().update(config)
+
+        self.o.center = (self.x, self.y)
+        self.o.set_width(self.w)
+        self.o.set_height(self.h)
+        self.o.set_angle(np.degrees(self.angle))
+        self.o.set_color(self.color)
