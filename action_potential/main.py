@@ -7,15 +7,16 @@ def main():
     ax.set_xlim((-10, 10))
     ax.set_ylim((-10, 10))
 
-    from objects.shapes.ellipse import Ellipse
+    from objects.shapes.double_ellipse import DoubleEllipse
 
-    c = Ellipse({
-        Ellipse.Attr.x: 1,
-        Ellipse.Attr.y: 2,
-        Ellipse.Attr.w: 3,
-        Ellipse.Attr.h: 5,
-        Ellipse.Attr.angle: np.pi / 4,
-        Ellipse.Attr.color: "green",
+    c = DoubleEllipse({
+        DoubleEllipse.Attr.x: 1,
+        DoubleEllipse.Attr.y: 2,
+        DoubleEllipse.Attr.w: 1,
+        DoubleEllipse.Attr.h: 5,
+        DoubleEllipse.Attr.angle: np.pi / 4,
+        DoubleEllipse.Attr.space: 2,
+        DoubleEllipse.Attr.color: "blue",
     })
     c.draw(ax)
 
