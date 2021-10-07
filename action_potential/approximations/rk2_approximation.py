@@ -14,7 +14,7 @@ class RK2Approximation(Approximation):
         x = np.zeros(t.shape)
         x[0] = f.x_0
         for i in range(1, len(t)):
-            k1 = f.f(x[i-1], t[i-1])
-            k2 = f.f(x[i-1] + (EPS / 2), t[i-1] + EPS * (k1 / 2))
-            x[i] = x[i-1] + EPS * (1 / 2) * (k1 + k2)
+            k1 = f.f(x[i - 1], t[i - 1])
+            k2 = f.f(x[i - 1] + (EPS / 2), t[i - 1] + EPS * (k1 / 2))
+            x[i] = x[i - 1] + EPS * (1 / 2) * (k1 + k2)
         return x

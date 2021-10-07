@@ -2,10 +2,13 @@ import os
 import numpy as np, matplotlib.pyplot as plt
 
 from action_potential.approximations import (
-    Approximation, EulerApproximation,
+    Approximation,
+    EulerApproximation,
 )
 from action_potential.gates import (
-    SodiumActivation, SodiumInactivation, PotassiumActivation,
+    SodiumActivation,
+    SodiumInactivation,
+    PotassiumActivation,
 )
 from action_potential.action_potentials import ActionPotential
 
@@ -17,12 +20,16 @@ class ActionPotentialExperiment(Experiment):
     def run(self):
         t = np.arange(0, 25, Approximation.EPS)
 
-        action_potential = ActionPotential(SodiumActivation(), SodiumInactivation(), PotassiumActivation())
+        action_potential = ActionPotential(
+            SodiumActivation(), SodiumInactivation(), PotassiumActivation()
+        )
         V_0s = [-65.0, -70.0, -55.0]
 
         for V_0 in V_0s:
             action_potential.set_V_0(V_0)
-            action_potential_approximation = EulerApproximation.approximate(action_potential, t)
+            action_potential_approximation = EulerApproximation.approximate(
+                action_potential, t
+            )
             plt.plot(t, action_potential_approximation, label=r"$V_0=$" + str(V_0))
 
         plt.legend()

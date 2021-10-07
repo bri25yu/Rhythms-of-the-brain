@@ -9,6 +9,8 @@ class Experiment:
 
 
 registered_experiments = dict()
+
+
 def register(cls):
     registered_experiments[cls.__name__] = cls
     return cls

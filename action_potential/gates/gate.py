@@ -10,7 +10,7 @@ class Gate:
     def time_constant(self, V):
         alpha = self.alpha(V)
         beta = self.beta(V)
-        
+
         return 1 / (alpha + beta)
 
     def alpha(self, V):

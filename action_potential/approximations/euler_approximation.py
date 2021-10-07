@@ -12,5 +12,5 @@ class EulerApproximation(Approximation):
         x = np.zeros(t.shape)
         x[0] = f.x_0
         for i in range(1, len(t)):
-            x[i] = x[i-1] + EulerApproximation.EPS * f.f(x[i-1], t[i-1])
+            x[i] = x[i - 1] + EulerApproximation.EPS * f.f(x[i - 1], t[i - 1])
         return x

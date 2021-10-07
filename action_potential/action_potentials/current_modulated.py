@@ -17,10 +17,10 @@ class CurrentModulatedActionPotential(ActionPotential):
 
     def f(self, x, t):
         dxdt = super().f(x, t)
-        
+
         I_current = self.input_current.F(t)
-        
+
         return dxdt + I_current
-    
+
     def set_input_current(self, input_current):
         self.input_current = input_current
