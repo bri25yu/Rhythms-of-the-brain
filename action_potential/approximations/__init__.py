@@ -1,0 +1,5 @@
+from action_potential.approximations.approximation import Approximation
+
+from action_potential.approximations.euler_approximation import EulerApproximation
+from action_potential.approximations.rk2_approximation import RK2Approximation
+from action_potential.approximations.taylor2_approximation import Taylor2Approximation
