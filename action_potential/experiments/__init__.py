@@ -4,3 +4,4 @@ from action_potential.experiments.experiment import (
 
 from action_potential.experiments.approximations import ApproximationsExperiment
 from action_potential.experiments.gates import GatesExperiment
+from action_potential.experiments.action_potential import ActionPotentialExperiment
