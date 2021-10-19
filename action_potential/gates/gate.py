@@ -2,16 +2,10 @@ class Gate:
     name = None
 
     def steady_state(self, V):
-        alpha = self.alpha(V)
-        beta = self.beta(V)
-
-        return alpha / (alpha + beta)
+        raise NotImplementedError()
 
     def time_constant(self, V):
-        alpha = self.alpha(V)
-        beta = self.beta(V)
-
-        return 1 / (alpha + beta)
+        raise NotImplementedError()
 
     def alpha(self, V):
         raise NotImplementedError()

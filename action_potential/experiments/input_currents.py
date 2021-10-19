@@ -6,9 +6,9 @@ from action_potential.approximations import (
     RK2Approximation,
 )
 from action_potential.gates import (
-    SodiumActivation,
-    SodiumInactivation,
-    PotassiumActivation,
+    HodgkinHuxleySodiumActivation,
+    HodgkinHuxleySodiumInactivation,
+    HodgkinHuxleyPotassiumActivation,
 )
 from action_potential.action_potentials import CurrentModulatedActionPotential
 from action_potential.currents import (
@@ -35,9 +35,9 @@ class InputCurrentsExperiment(Experiment):
         fig, axs = plt.subplots(n_input_currents, figsize=(8, 5 * n_input_currents))
 
         current_modulated_action_potential = CurrentModulatedActionPotential(
-            SodiumActivation(),
-            SodiumInactivation(),
-            PotassiumActivation(),
+            HodgkinHuxleySodiumActivation(),
+            HodgkinHuxleySodiumInactivation(),
+            HodgkinHuxleyPotassiumActivation(),
             None,
         )
 

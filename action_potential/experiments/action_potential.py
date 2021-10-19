@@ -6,9 +6,9 @@ from action_potential.approximations import (
     EulerApproximation,
 )
 from action_potential.gates import (
-    SodiumActivation,
-    SodiumInactivation,
-    PotassiumActivation,
+    HodgkinHuxleySodiumActivation,
+    HodgkinHuxleySodiumInactivation,
+    HodgkinHuxleyPotassiumActivation,
 )
 from action_potential.action_potentials import ActionPotential
 
@@ -21,7 +21,7 @@ class ActionPotentialExperiment(Experiment):
         t = np.arange(0, 25, Approximation.EPS)
 
         action_potential = ActionPotential(
-            SodiumActivation(), SodiumInactivation(), PotassiumActivation()
+            HodgkinHuxleySodiumActivation(), HodgkinHuxleySodiumInactivation(), HodgkinHuxleyPotassiumActivation()
         )
         V_0s = [-65.0, -70.0, -55.0]
 

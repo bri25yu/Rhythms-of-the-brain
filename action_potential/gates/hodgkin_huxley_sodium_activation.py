@@ -1,9 +1,9 @@
 import numpy as np
 
-from action_potential.gates.gate import Gate
+from action_potential.gates.hodgkin_huxley_gate import HodgkinHuxleyGate
 
 
-class SodiumActivation(Gate):
+class HodgkinHuxleySodiumActivation(HodgkinHuxleyGate):
     name = "Sodium activation"
 
     def alpha(self, V):
