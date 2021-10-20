@@ -1,1 +1,0 @@
-1. Kopell et al.
