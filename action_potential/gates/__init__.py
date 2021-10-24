@@ -1,6 +1,8 @@
 from action_potential.gates.gate import Gate
 
-from action_potential.gates.hodgkin_huxley_gate import HodgkinHuxleyGate
-from action_potential.gates.hodgkin_huxley_sodium_activation import HodgkinHuxleySodiumActivation
-from action_potential.gates.hodgkin_huxley_sodium_inactivation import HodgkinHuxleySodiumInactivation
-from action_potential.gates.hodgkin_huxley_potassium_activation import HodgkinHuxleyPotassiumActivation
+from action_potential.gates.hodgkin_huxley import (
+    HodgkinHuxleyGate,
+    HodgkinHuxleySodiumActivation,
+    HodgkinHuxleySodiumInactivation,
+    HodgkinHuxleyPotassiumActivation,
+)

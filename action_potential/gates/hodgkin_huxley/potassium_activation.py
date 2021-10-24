@@ -1,6 +1,6 @@
 import numpy as np
 
-from action_potential.gates.hodgkin_huxley_gate import HodgkinHuxleyGate
+from action_potential.gates.hodgkin_huxley.gate import HodgkinHuxleyGate
 
 
 class HodgkinHuxleyPotassiumActivation(HodgkinHuxleyGate):
