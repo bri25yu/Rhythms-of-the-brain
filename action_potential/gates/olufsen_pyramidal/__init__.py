@@ -1,0 +1,3 @@
+from action_potential.gates.olufsen_pyramidal.sodium_activation import OlufsenPyramidalSodiumActivation
+from action_potential.gates.olufsen_pyramidal.sodium_inactivation import OlufsenPyramidalSodiumInactivation
+from action_potential.gates.olufsen_pyramidal.potassium_activation import OlufsenPyramidalPotassiumActivation

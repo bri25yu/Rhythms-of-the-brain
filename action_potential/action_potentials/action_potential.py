@@ -6,6 +6,8 @@ from action_potential.approximations.approximation import Approximation
 
 class ActionPotential(Function):
     name = "Action potential"
+
+    # These numbers default to the Hodkin-Huxley model
     x_0 = -65.0
 
     g_Na = 120.0
@@ -18,6 +20,8 @@ class ActionPotential(Function):
     Q_10 = 3.0
     T_base = 6.3
     T = 7.3
+
+    C = 1.0
 
     def __init__(self, sodium_activation, sodium_inactivation, potassium_activation):
         self.sodium_activation = sodium_activation
@@ -51,7 +55,7 @@ class ActionPotential(Function):
         g_K = self.g_K * (self.n ** 4)
         g_L = self.g_L
 
-        return -g_Na * (x - self.E_Na) - g_K * (x - self.E_K) - g_L * (x - self.E_L)
+        return (-g_Na * (x - self.E_Na) - g_K * (x - self.E_K) - g_L * (x - self.E_L)) / self.C
 
     def set_V_0(self, V_0):
         self.m = self.sodium_activation.steady_state(V_0)

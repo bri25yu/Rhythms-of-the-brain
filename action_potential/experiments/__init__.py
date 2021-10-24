@@ -8,3 +8,4 @@ from action_potential.experiments.approximations import ApproximationsExperiment
 from action_potential.experiments.gates import GatesExperiment
 from action_potential.experiments.action_potential import ActionPotentialExperiment
 from action_potential.experiments.input_currents import InputCurrentsExperiment
+from action_potential.experiments.neuron_type_current_response import NeuronTypeCurrentResponseExperiment

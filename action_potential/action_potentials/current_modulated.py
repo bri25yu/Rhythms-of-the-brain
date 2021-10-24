@@ -20,7 +20,7 @@ class CurrentModulatedActionPotential(ActionPotential):
 
         I_current = self.input_current.F(t)
 
-        return dxdt + I_current
+        return dxdt + (I_current / self.C)
 
     def set_input_current(self, input_current):
         self.input_current = input_current
