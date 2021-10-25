@@ -1,0 +1,4 @@
+from action_potential.synapses.synapse import Synapse
+from action_potential.synapses.ampa_synapse import AMPASynapse
+from action_potential.synapses.gaba_basket_synapse import GABABasketSynapse
+from action_potential.synapses.gaba_o_lm_synapse import GABAOLMSynapse

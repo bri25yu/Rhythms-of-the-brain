@@ -1,0 +1,1 @@
+from action_potential.networks.small_e_i_network import SmallEINetwork

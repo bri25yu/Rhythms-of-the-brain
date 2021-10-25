@@ -30,3 +30,10 @@ In order to produce theta and gamma rhythms, we investigate the behavior of seve
 
 
 ![](output/NeuronTypeCurrentResponseExperiment.png)
+<div style="page-break-after: always;"></div>
+
+
+Using 80 Excitatory (pyramidal) and 20 Inhibitory (fast spiking basket) neurons, we can mimic PING rhythms. Neurons 1-20 are I and neurons 21-100 are E. 
+
+
+![](output/SmallEINetworkFastExperiment.png)
