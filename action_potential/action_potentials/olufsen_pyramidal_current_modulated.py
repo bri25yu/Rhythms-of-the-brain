@@ -10,3 +10,10 @@ class OlufsenPyramidalCurrentModulatedActionPotential(CurrentModulatedActionPote
     E_Na = 50.0
     E_K = -100.0
     E_L = -67.0
+
+    def _update_state(self, x, t):
+        phi = self.Q_10 ** ((self.T - self.T_base) / 10)
+
+        self.m = self.sodium_activation.steady_state(x)
+        self.h = self._hodgkin_huxley_update_state(self.sodium_inactivation, self.h, phi, x)
+        self.n = self._hodgkin_huxley_update_state(self.potassium_activation, self.n, phi, x)

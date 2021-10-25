@@ -31,25 +31,7 @@ class ActionPotential(Function):
         self.reset()
 
     def f(self, x, t):
-        alpha_m, beta_m = self.sodium_activation.alpha(x), self.sodium_activation.beta(
-            x
-        )
-        alpha_h, beta_h = self.sodium_inactivation.alpha(
-            x
-        ), self.sodium_inactivation.beta(x)
-        alpha_n, beta_n = self.potassium_activation.alpha(
-            x
-        ), self.potassium_activation.beta(x)
-
-        dm = alpha_m * (1 - self.m) - beta_m * self.m
-        dh = alpha_h * (1 - self.h) - beta_h * self.h
-        dn = alpha_n * (1 - self.n) - beta_n * self.n
-
-        phi = self.Q_10 ** ((self.T - self.T_base) / 10)
-
-        self.m = self.m + dm * phi * Approximation.EPS
-        self.h = self.h + dh * phi * Approximation.EPS
-        self.n = self.n + dn * phi * Approximation.EPS
+        self._update_state(x, t)
 
         g_Na = self.g_Na * (self.m ** 3) * self.h
         g_K = self.g_K * (self.n ** 4)
@@ -64,3 +46,19 @@ class ActionPotential(Function):
 
     def reset(self):
         self.set_V_0(self.x_0)
+
+    def _update_state(self, x, t):
+        phi = self._hodgkin_huxley_temperature_constant()
+
+        self.m = self._hodgkin_huxley_update_state(self.sodium_activation, self.m, phi, x)
+        self.h = self._hodgkin_huxley_update_state(self.sodium_inactivation, self.h, phi, x)
+        self.n = self._hodgkin_huxley_update_state(self.potassium_activation, self.n, phi, x)
+
+    @staticmethod
+    def _hodgkin_huxley_update_state(activation, state, phi, V):
+        alpha, beta = activation.alpha(V), activation.beta(V)
+        dx = alpha * (1 - state) - beta * state
+        return state + dx * phi * Approximation.EPS
+
+    def _hodgkin_huxley_temperature_constant(self):
+        return self.Q_10 ** ((self.T - self.T_base) / 10)

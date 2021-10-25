@@ -23,3 +23,10 @@ We can further model an input current's effect on our action potential model, si
 
 
 ![](output/InputCurrentsExperiment.png)
+<div style="page-break-after: always;"></div>
+
+
+In order to produce theta and gamma rhythms, we investigate the behavior of several different types of neurons; specifically, we compare the original Hodgkin-Huxley neuron model with the Olufsen Pyramidal neuron, Wang-Buzsaki fast-spiking neuron, and the Tort O-LM interneuron models. 
+
+
+![](output/NeuronTypeCurrentResponseExperiment.png)

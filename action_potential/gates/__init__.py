@@ -19,3 +19,13 @@ from action_potential.gates.wang_buzsaki_fast_spiking import (
     WangBuzsakiFastSpikingSodiumInactivation,
     WangBuzsakiFastSpikingPotassiumActivation,
 )
+
+from action_potential.gates.tort_o_lm_interneuron import (
+    TortOLMInterneuronGate,
+    TortOLMInterneuronSodiumActivation,
+    TortOLMInterneuronSodiumInactivation,
+    TortOLMInterneuronPotassiumActivation,
+    TortOLMInterneuronAActivation,
+    TortOLMInterneuronBActivation,
+    TortOLMInterneuronRActivation,
+)
