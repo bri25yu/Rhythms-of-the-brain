@@ -20,5 +20,9 @@ class Synapse:
         ds = (heaviside * (1 - self.s) / self.tau_R) - self.s / self.tau_D
         self.s += ds * Approximation.EPS
 
-        input_current = np.sum(self.conductance * self.s) * (self.V_rev - self.neuron2.voltage)
+        if isinstance(self.s, np.ndarray):
+            multiplier = self.s @ self.conductance
+        else:
+            multiplier = np.sum(self.conductance * self.s)
+        input_current = multiplier * (self.V_rev - self.neuron2.voltage)
         self.neuron2.integrate(input_current)

@@ -37,3 +37,6 @@ Using 80 Excitatory (pyramidal) and 20 Inhibitory (fast spiking basket) neurons,
 
 
 ![](output/SmallEINetworkFastExperiment.png)
+
+
+![](output/PingPropertiesEINetworkExperiment.png)

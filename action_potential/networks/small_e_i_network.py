@@ -13,16 +13,34 @@ from action_potential.action_potentials import (
     WangBuzsakiFastSpikingCurrentModulatedActionPotential,
 )
 from action_potential.currents.adjustable_input_current import AdjustableInputCurrent
+from action_potential.approximations.approximation import Approximation
 from action_potential.neurons import Neuron
 from action_potential.synapses import AMPASynapse, GABABasketSynapse
 
 
 class SmallEINetwork:
+    name = "Small E-I network"
+
     NUM_E = 80
     NUM_I = 20
 
+    P_EE = 1.0
+    P_EI = 1.0
+    P_IE = 1.0
+    P_II = 1.0
+
+    g_stoch_E = 0.0
+    tau_D_stoch_E = 0.0
+    f_stoch_E = 0.0
+
+    g_stoch_I = 0.0
+    tau_D_stoch_I = 0.0
+    f_stoch_I = 0.0
+
     def __init__(self, fast=False):
         self.fast = fast
+
+        self.s_stoch_E = np.zeros((self.NUM_E,))
 
         if self.fast:
             self._init_e_neurons_fast(self.NUM_E)
@@ -47,9 +65,9 @@ class SmallEINetwork:
         else:
             return np.array([neuron.voltage for neuron in self.neurons])
 
-    def draw(self, T):
+    def draw(self, T, fig_ax=None):
         updates_per_tick = 100
-        ticks_per_ms = 1000 // updates_per_tick
+        ticks_per_ms = int(1 / Approximation.EPS) // updates_per_tick
         total_ticks = T * ticks_per_ms
 
         data = [self.snapshot()]
@@ -64,7 +82,11 @@ class SmallEINetwork:
         spike_locations, spike_times = np.argwhere(spikes).T + 1
         spike_times = spike_times / ticks_per_ms
 
-        fig, ax = plt.subplots(figsize=(15, 15))
+        if fig_ax is None:
+            fig, ax = plt.subplots(figsize=(15, 15))
+        else:
+            fig, ax = fig_ax
+
         ax.scatter(spike_times, spike_locations)
         ax.set_xlim(0, T)
 
@@ -120,15 +142,23 @@ class SmallEINetwork:
     def _init_ei_ie_synapses(self):
         for e_neuron in self.e_neurons:
             for i_neuron in self.i_neurons:
-                e_synapse = AMPASynapse(0.5, e_neuron, i_neuron)
-                i_synapse = GABABasketSynapse(1.5, i_neuron, e_neuron)
+                ei_g = np.random.binomial(1, self.P_EI) * 0.5 / (self.P_EI * self.NUM_E)
+                ie_g = np.random.binomial(1, self.P_IE) * 1.5 / (self.P_IE * self.NUM_I)
+
+                e_synapse = AMPASynapse(ei_g, e_neuron, i_neuron)
+                i_synapse = GABABasketSynapse(ie_g, i_neuron, e_neuron)
 
                 e_neuron.add_synapses((e_synapse,))
                 i_neuron.add_synapses((i_synapse,))
 
     def _init_ei_ie_synapses_fast(self):
-        e_synapse = AMPASynapse(0.5, self.e_neurons, self.i_neurons)
-        i_synapse = GABABasketSynapse(1.5, self.i_neurons, self.e_neurons)
+        ei_g = np.random.binomial(1, self.P_EI, size=(self.NUM_E, self.NUM_I))
+        ei_g = ei_g * 0.5 / (self.P_EI * self.NUM_E)
+        ie_g = np.random.binomial(1, self.P_IE, size=(self.NUM_I, self.NUM_E))
+        ie_g = ie_g * 1.5 / (self.P_IE * self.NUM_I)
+
+        e_synapse = AMPASynapse(ei_g, self.e_neurons, self.i_neurons)
+        i_synapse = GABABasketSynapse(ie_g, self.i_neurons, self.e_neurons)
 
         self.e_neurons.add_synapses((e_synapse,))
         self.i_neurons.add_synapses((i_synapse,))
@@ -145,7 +175,7 @@ class SmallEINetwork:
             neuron.update()
 
     def _update_fast(self):
-        input_current = 2.5 + 2 * (np.arange(self.NUM_E) + 20) / self.NUM_E
+        input_current = self._deterministic_E_input_current() + self._stochastic_E_input_current()
         self.e_neurons.integrate(input_current)
 
         self.e_neurons.fire()
@@ -153,3 +183,19 @@ class SmallEINetwork:
 
         self.e_neurons.update()
         self.i_neurons.update()
+
+    def _deterministic_E_input_current(self):
+        return 2.5 + (2 * (np.arange(1, self.NUM_E + 1) + 20) / self.NUM_E)
+
+    def _stochastic_E_input_current(self):
+        self.s_stoch_E = self.s_stoch_E - Approximation.EPS * self.tau_D_stoch_E * self.s_stoch_E
+        input_current = -self.s_stoch_E * self.g_stoch_E * self.e_neurons.voltage
+
+        reset = np.random.binomial(
+            1,
+            Approximation.EPS * self.f_stoch_E / 1000,
+            size=self.s_stoch_E.shape,
+        )
+        self.s_stoch_E = reset + (1 - reset) * self.s_stoch_E
+
+        return input_current

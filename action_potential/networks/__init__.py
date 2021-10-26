@@ -1,1 +1,3 @@
 from action_potential.networks.small_e_i_network import SmallEINetwork
+from action_potential.networks.strong_ping_ei_network import StrongPingEINetwork
+from action_potential.networks.weak_ping_ei_network import WeakPingEINetwork
