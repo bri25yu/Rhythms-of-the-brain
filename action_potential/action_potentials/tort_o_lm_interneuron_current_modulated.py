@@ -64,14 +64,12 @@ class TortOLMInterneuronCurrentModulatedActionPotential(CurrentModulatedActionPo
         self.r = self.r_activation.steady_state(V_0)
     
     def _update_state(self, x, t):
-        phi = self._hodgkin_huxley_temperature_constant()
-
-        self.m = self._hodgkin_huxley_update_state(self.sodium_activation, self.m, phi, x)
-        self.h = self._hodgkin_huxley_update_state(self.sodium_inactivation, self.h, phi, x)
-        self.n = self._hodgkin_huxley_update_state(self.potassium_activation, self.n, phi, x)
-        self.a = self._tort_o_lm_update_state(self.a_activation, self.a, phi, x)
-        self.b = self._tort_o_lm_update_state(self.b_activation, self.b, phi, x)
-        self.r = self._tort_o_lm_update_state(self.r_activation, self.r, phi, x)
+        self.m = self._hodgkin_huxley_update_state(self.sodium_activation, self.m, 1.0, x)
+        self.h = self._hodgkin_huxley_update_state(self.sodium_inactivation, self.h, 1.0, x)
+        self.n = self._hodgkin_huxley_update_state(self.potassium_activation, self.n, 1.0, x)
+        self.a = self._tort_o_lm_update_state(self.a_activation, self.a, 1.0, x)
+        self.b = self._tort_o_lm_update_state(self.b_activation, self.b, 1.0, x)
+        self.r = self._tort_o_lm_update_state(self.r_activation, self.r, 1.0, x)
 
     @staticmethod
     def _tort_o_lm_update_state(activation, state, phi, V):

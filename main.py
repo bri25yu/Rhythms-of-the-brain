@@ -1,5 +1,8 @@
 import sys
 
+import numpy as np
+np.random.seed(0)
+
 from action_potential.experiments import registered_experiments
 
 

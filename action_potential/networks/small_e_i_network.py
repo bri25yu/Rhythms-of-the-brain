@@ -29,6 +29,11 @@ class SmallEINetwork:
     P_IE = 1.0
     P_II = 1.0
 
+    g_EI = 0.5
+    g_IE = 1.5
+    g_EE = 0.0
+    g_II = 0.0
+
     g_stoch_E = 0.0
     tau_D_stoch_E = 0.0
     f_stoch_E = 0.0
@@ -41,6 +46,7 @@ class SmallEINetwork:
         self.fast = fast
 
         self.s_stoch_E = np.zeros((self.NUM_E,))
+        self.s_stoch_I = np.zeros((self.NUM_I,))
 
         if self.fast:
             self._init_e_neurons_fast(self.NUM_E)
@@ -142,8 +148,8 @@ class SmallEINetwork:
     def _init_ei_ie_synapses(self):
         for e_neuron in self.e_neurons:
             for i_neuron in self.i_neurons:
-                ei_g = np.random.binomial(1, self.P_EI) * 0.5 / (self.P_EI * self.NUM_E)
-                ie_g = np.random.binomial(1, self.P_IE) * 1.5 / (self.P_IE * self.NUM_I)
+                ei_g = np.random.binomial(1, self.P_EI) * self.g_EI / (self.P_EI * self.NUM_E)
+                ie_g = np.random.binomial(1, self.P_IE) * self.g_IE / (self.P_IE * self.NUM_I)
 
                 e_synapse = AMPASynapse(ei_g, e_neuron, i_neuron)
                 i_synapse = GABABasketSynapse(ie_g, i_neuron, e_neuron)
@@ -153,9 +159,9 @@ class SmallEINetwork:
 
     def _init_ei_ie_synapses_fast(self):
         ei_g = np.random.binomial(1, self.P_EI, size=(self.NUM_E, self.NUM_I))
-        ei_g = ei_g * 0.5 / (self.P_EI * self.NUM_E)
+        ei_g = ei_g * self.g_EI / (self.P_EI * self.NUM_E)
         ie_g = np.random.binomial(1, self.P_IE, size=(self.NUM_I, self.NUM_E))
-        ie_g = ie_g * 1.5 / (self.P_IE * self.NUM_I)
+        ie_g = ie_g * self.g_IE / (self.P_IE * self.NUM_I)
 
         e_synapse = AMPASynapse(ei_g, self.e_neurons, self.i_neurons)
         i_synapse = GABABasketSynapse(ie_g, self.i_neurons, self.e_neurons)
@@ -175,8 +181,11 @@ class SmallEINetwork:
             neuron.update()
 
     def _update_fast(self):
-        input_current = self._deterministic_E_input_current() + self._stochastic_E_input_current()
-        self.e_neurons.integrate(input_current)
+        e_input_current = self._deterministic_E_input_current() + self._stochastic_E_input_current()
+        self.e_neurons.integrate(e_input_current)
+
+        i_input_current = self._deterministic_I_input_current() + self._stochastic_I_input_current()
+        self.i_neurons.integrate(i_input_current)
 
         self.e_neurons.fire()
         self.i_neurons.fire()
@@ -187,15 +196,40 @@ class SmallEINetwork:
     def _deterministic_E_input_current(self):
         return 2.5 + (2 * (np.arange(1, self.NUM_E + 1) + 20) / self.NUM_E)
 
+    def _deterministic_I_input_current(self):
+        return 0.0
+
     def _stochastic_E_input_current(self):
-        self.s_stoch_E = self.s_stoch_E - Approximation.EPS * self.tau_D_stoch_E * self.s_stoch_E
-        input_current = -self.s_stoch_E * self.g_stoch_E * self.e_neurons.voltage
+        self.s_stoch_E, input_current =\
+            self._kopell_stochastic_input_current(
+                self.s_stoch_E,
+                self.tau_D_stoch_E,
+                self.g_stoch_E,
+                self.e_neurons.voltage,
+                self.f_stoch_E,
+            )
+        return input_current
+    
+    def _stochastic_I_input_current(self):
+        self.s_stoch_I, input_current =\
+            self._kopell_stochastic_input_current(
+                self.s_stoch_I,
+                self.tau_D_stoch_I,
+                self.g_stoch_I,
+                self.i_neurons.voltage,
+                self.f_stoch_I,
+            )
+        return input_current
+
+    def _kopell_stochastic_input_current(self, s, tau, g, V, f):
+        s = s - Approximation.EPS * tau * s
+        input_current = -s * g * V
 
         reset = np.random.binomial(
             1,
-            Approximation.EPS * self.f_stoch_E / 1000,
-            size=self.s_stoch_E.shape,
+            Approximation.EPS * f / 1000,
+            size=s.shape,
         )
-        self.s_stoch_E = reset + (1 - reset) * self.s_stoch_E
+        s = reset + (1 - reset) * s
 
-        return input_current
+        return s, input_current

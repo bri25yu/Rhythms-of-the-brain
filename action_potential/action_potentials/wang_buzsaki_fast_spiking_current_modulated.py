@@ -12,8 +12,6 @@ class WangBuzsakiFastSpikingCurrentModulatedActionPotential(CurrentModulatedActi
     E_L = -65.0
 
     def _update_state(self, x, t):
-        phi = self._hodgkin_huxley_temperature_constant()
-
         self.m = self.sodium_activation.steady_state(x)
-        self.h = self._hodgkin_huxley_update_state(self.sodium_inactivation, self.h, phi, x)
-        self.n = self._hodgkin_huxley_update_state(self.potassium_activation, self.n, phi, x)
+        self.h = self._hodgkin_huxley_update_state(self.sodium_inactivation, self.h, 1.0, x)
+        self.n = self._hodgkin_huxley_update_state(self.potassium_activation, self.n, 1.0, x)
