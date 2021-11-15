@@ -1,3 +1,12 @@
+# Instructions
+This package assumes you have `numpy` installed.
+```
+git clone https://github.com/bri25yu/Rhythms-of-the-brain.git
+cd Rhythms-of-the-brain
+python3 main.py  # or your version of python
+```
+
+# Description
 We need to numerically approximate a solution to the Hodgkin-Huxley partial differential equation, so we write some approximation methods first, including the Euler, Runge-Kutta order 2 (RK2), and Taylor order 2 approximation methods.
 
 
