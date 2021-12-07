@@ -13,3 +13,6 @@ from action_potential.experiments.small_e_i_network import SmallEINetworkExperim
 from action_potential.experiments.small_e_i_network_fast import SmallEINetworkFastExperiment
 
 from action_potential.experiments.ping_properties_ei_network import PingPropertiesEINetworkExperiment
+
+from action_potential.experiments.voltage import VoltageExperiment
+from action_potential.experiments.fft import FFTExperiment

@@ -40,3 +40,13 @@ Using 80 Excitatory (pyramidal) and 20 Inhibitory (fast spiking basket) neurons,
 
 
 ![](output/PingPropertiesEINetworkExperiment.png)
+<div style="page-break-after: always;"></div>
+
+
+We can use signal processing to describe our rhythms using frequency.
+
+
+![](output/VoltageExperiment.png)
+
+
+![](output/FFTExperiment.png)

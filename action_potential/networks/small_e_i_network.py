@@ -71,7 +71,7 @@ class SmallEINetwork:
         else:
             return np.array([neuron.voltage for neuron in self.neurons])
 
-    def draw(self, T, fig_ax=None):
+    def simulate(self, T):
         updates_per_tick = 100
         ticks_per_ms = int(1 / Approximation.EPS) // updates_per_tick
         total_ticks = T * ticks_per_ms
@@ -84,9 +84,24 @@ class SmallEINetwork:
             if (i+1) % 10 == 0:
                 print(f"Finished {i+1} / {total_ticks}\r", end="", flush=True)
         print()
-        spikes = np.array(data).T >= 35.0
+
+        data = np.array(data).T
+        spikes = data >= 35.0
         spike_locations, spike_times = np.argwhere(spikes).T + 1
         spike_times = spike_times / ticks_per_ms
+
+        t_voltage = np.arange(total_ticks+1) / ticks_per_ms
+        e_voltage = data[self.NUM_I:, :].mean(axis=0)
+        i_voltage = data[:self.NUM_I, :].mean(axis=0)
+
+        return (
+            spike_times,
+            spike_locations,
+            (t_voltage, e_voltage, i_voltage),
+        )
+
+    def draw(self, T, fig_ax=None):
+        spike_times, spike_locations = self.simulate(T)[:2]
 
         if fig_ax is None:
             fig, ax = plt.subplots(figsize=(15, 15))
@@ -233,3 +248,10 @@ class SmallEINetwork:
         s = reset + (1 - reset) * s
 
         return s, input_current
+
+    @staticmethod
+    def _smooth_by_binning(ticks_per_ms, signal):
+        smoothed = np.zeros((signal.shape[0] // ticks_per_ms) + 1)
+        for i in range(0, signal.shape[0], ticks_per_ms):
+            smoothed[i // ticks_per_ms] = signal[i: i + ticks_per_ms].mean()
+        return smoothed
